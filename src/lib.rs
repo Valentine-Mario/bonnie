@@ -48,12 +48,14 @@ pub async fn install_dependencie_from_toml(value: String) {
     let dep=parse_dependencies(value).unwrap();
     for (package, version) in dep.dependencies {
         let version = version.replace("~", "");
+        let version = version.replace("^", "");
         println!("getting packages...");
         let mut dep = get_dependencies_and_dev_dependencies(&package, &version)
             .await
             .unwrap();
         for (k, v) in dep.clone() {
             let v = v.replace("~", "");
+            let v = v.replace("^", "");
             let a = get_related_dependencies(&k, &v).await.unwrap();
             println!("{:?}", a);
             for (key, value) in a {
@@ -63,6 +65,7 @@ pub async fn install_dependencie_from_toml(value: String) {
         for (k, v) in dep.clone() {
             println!("downloading dependency {} ...", k);
             let v = v.replace("~", "");
+            let v = v.replace("^", "");
             let link = get_tarball_download_link_and_name(&k, &v).await;
             match link {
                 Ok(link) => {
@@ -91,12 +94,15 @@ pub async fn install_dependencie_from_arg(args: &[std::string::String]) {
     for dependency in args {
         let (package, version) = get_latest_version(dependency).await.unwrap();
         let version = version.replace("~", "");
+        let version = version.replace("^", "");
         println!("getting packages...");
         let mut dep = get_dependencies_and_dev_dependencies(package, &version)
             .await
             .unwrap();
+            println!("{:?}", dep);
         for (k, v) in dep.clone() {
             let v = v.replace("~", "");
+            let v = v.replace("^", "");
             let a = get_related_dependencies(&k, &v).await.unwrap();
             println!("{:?}", a);
             for (key, value) in a {
@@ -106,6 +112,7 @@ pub async fn install_dependencie_from_arg(args: &[std::string::String]) {
         for (k, v) in dep.clone() {
             println!("downloading dependency {} ...", k);
             let v = v.replace("~", "");
+            let v = v.replace("^", "");
             let link = get_tarball_download_link_and_name(&k, &v).await;
             match link {
                 Ok(link) => {
