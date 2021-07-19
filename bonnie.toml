@@ -8,3 +8,4 @@ release = "standard-version && git push --follow-tags origin main"
 
 [dependencies]
 express="4.17.1"
+imagizer-javascript = "1.9.1"

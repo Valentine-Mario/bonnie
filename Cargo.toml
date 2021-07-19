@@ -17,6 +17,8 @@ flate2 = "1.0.20"
 tar = "0.4.33"
 dircpy="0.3.6"
 async-recursion="0.3.2"
+toml_edit= "0.2.1"
+
 
 [lib]
 name = "bonnie_lib"

@@ -1,5 +1,7 @@
 use std::env::VarError;
 use std::fs;
+use toml_edit::{Document, value};
+use std::env;
 
 mod command;
 mod commands_registry;
@@ -119,6 +121,14 @@ pub async fn install_dependencie_from_arg(args: &[std::string::String]) {
         match link {
             Ok(link) => {
                 download_package(link).await.unwrap();
+                //write to bonie toml
+                let cfg_path = get_cfg_path(env::var("BONNIE_CONF"));
+                let contents = fs::read_to_string(&cfg_path)
+                .expect("Something went wrong reading the file");
+                let mut doc = contents.parse::<Document>().expect("invalid toml document");
+                doc["dependencies"][&package]=value(version);
+                doc["dependencies"].as_inline_table_mut().map(|t| t.fmt());
+                fs::write(&cfg_path, doc.to_string()).unwrap();
             }
             Err(err) => {
                 eprintln!("{}", err)
